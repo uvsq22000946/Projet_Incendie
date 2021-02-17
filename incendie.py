@@ -32,6 +32,14 @@ def generation():
         canvas.create_line((x * 25, 0), (x * 25, HAUTEUR), fill="white")
         x += 1
 
+
+    for h in range (HAUTEUR // 25):
+        etat = rd.randint(0,2)
+        if etat == 1:
+            canvas.create_rectangle((0, h*25), 0+25, h*25+25, fill = "green")
+
+
+
 ###############################
 # Programme principal
 
@@ -44,4 +52,8 @@ boutton_generation = tk.Button(racine, text="Génération du terrain", font=("He
 
 canvas.grid(column=0, rowspan=3)
 boutton_generation.grid(row=0, column=1)
+
+
+
+
 racine.mainloop()
