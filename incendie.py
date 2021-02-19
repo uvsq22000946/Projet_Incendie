@@ -17,10 +17,17 @@ import tkinter as tk
 import random as rd
 
 ###############################
-# Variables globales
+# Constantes
 
 HAUTEUR = 400
 LARGEUR = 600
+
+###############################
+# Variables globales
+
+liste_parcelle_eau = []
+liste_parcelle_foret = []
+liste_parcelle_plaine = []
 
 ###############################
 # Fonctions
@@ -33,12 +40,13 @@ def generation():
             etat = rd.randint(0,2)
             if etat == 0:
                 canvas.create_rectangle((l * 25, h * 25), (l * 25 + 25, h * 25 + 25), fill="blue")
+                liste_parcelle_eau.append([l, h])
             if etat == 1:
                 canvas.create_rectangle((l * 25, h*25), l * 25 + 25, h*25+25, fill = "green")
+                liste_parcelle_foret.append([l, h])
             if etat == 2:
                 canvas.create_rectangle((l * 25, h * 25), (l + 25 * 25, h * 25 + 25), fill="yellow")
-
-
+                liste_parcelle_plaine.append([l, h])
 
 
 ###############################
