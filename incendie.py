@@ -27,16 +27,17 @@ LARGEUR = 600
 
 def generation():
     """Genere un terrain aleatoirement"""
-    x = 0
-    while x != LARGEUR // 25:
-        canvas.create_line((x * 25, 0), (x * 25, HAUTEUR), fill="white")
-        x += 1
 
+    for l in range(LARGEUR // 25):
+        for h in range (HAUTEUR // 25):
+            etat = rd.randint(0,2)
+            if etat == 0:
+                canvas.create_rectangle((l * 25, h * 25), (l * 25 + 25, h * 25 + 25), fill="blue")
+            if etat == 1:
+                canvas.create_rectangle((l * 25, h*25), l * 25 + 25, h*25+25, fill = "green")
+            if etat == 2:
+                canvas.create_rectangle((l * 25, h * 25), (l + 25 * 25, h * 25 + 25), fill="yellow")
 
-    for h in range (HAUTEUR // 25):
-        etat = rd.randint(0,2)
-        if etat == 1:
-            canvas.create_rectangle((0, h*25), 0+25, h*25+25, fill = "green")
 
 
 
