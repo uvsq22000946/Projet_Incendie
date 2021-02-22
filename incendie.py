@@ -69,7 +69,6 @@ def pause():
 
 def check():
     """Checking des cases adjacentes"""
-    
 
 
 ###############################
@@ -78,7 +77,6 @@ def check():
 
 racine = tk.Tk()
 racine.config(bg="black")
-
 
 canvas = tk.Canvas(racine, height=HAUTEUR, width=LARGEUR, bg="black")
 
