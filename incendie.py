@@ -31,6 +31,17 @@ liste_parcelle = []
 # Fonctions
 
 
+def generation_parcelle(couleur, x, y):
+    """Genere une parcelle de la couleur
+    mise en argument aux coordonnee x et y"""
+    case_actuelle = []
+    case_actuelle.append(couleur)
+    case_actuelle.append(canvas.create_rectangle((x * 25, y * 25),
+                                                 (x * 25 + 25, y * 25 + 25),
+                                                 fill=couleur))
+    liste_parcelle.append(case_actuelle)
+
+
 def generation():
     """Genere un terrain aleatoirement"""
 
@@ -38,29 +49,11 @@ def generation():
         for y in range(HAUTEUR // 25):
             etat = rd.randint(0, 2)
             if etat == 0:
-                case_actuelle = []
-                case_actuelle.append("blue")
-                case_actuelle.append(canvas.create_rectangle((x * 25, y * 25),
-                                                             (x * 25 + 25,
-                                                              y * 25 + 25),
-                                                             fill="blue"))
-                liste_parcelle.append(case_actuelle)
+                generation_parcelle("blue", x, y)
             if etat == 1:
-                case_actuelle = []
-                case_actuelle.append("green")
-                case_actuelle.append(canvas.create_rectangle((x * 25, y * 25),
-                                                             (x * 25 + 25,
-                                                             y * 25 + 25),
-                                                             fill="green"))
-                liste_parcelle.append(case_actuelle)
+                generation_parcelle("green", x, y)
             if etat == 2:
-                case_actuelle = []
-                case_actuelle.append("yellow")
-                case_actuelle.append(canvas.create_rectangle((x * 25, y * 25),
-                                                             (x + 25 * 25,
-                                                             y * 25 + 25),
-                                                             fill="yellow"))
-                liste_parcelle.append(case_actuelle)
+                generation_parcelle("yellow", x, y)
 
 
 def start():
@@ -76,6 +69,7 @@ def pause():
 
 def check():
     """Checking des cases adjacentes"""
+    
 
 
 ###############################
