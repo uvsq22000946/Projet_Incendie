@@ -21,6 +21,7 @@ import random as rd
 
 HAUTEUR = 400
 LARGEUR = 600
+COTE = 25
 
 ###############################
 # Variables globales
@@ -36,8 +37,8 @@ def generation_parcelle(couleur, x, y):
     mise en argument aux coordonnee x et y"""
     case_actuelle = []
     case_actuelle.append(couleur)
-    case_actuelle.append(canvas.create_rectangle((x * 25, y * 25),
-                                                 (x * 25 + 25, y * 25 + 25),
+    case_actuelle.append(canvas.create_rectangle((x * COTE, y * COTE),
+                                                 (x * COTE + COTE, y * COTE + COTE),
                                                  fill=couleur))
     liste_parcelle.append(case_actuelle)
 
@@ -45,8 +46,8 @@ def generation_parcelle(couleur, x, y):
 def generation():
     """Genere un terrain aleatoirement"""
 
-    for x in range(LARGEUR // 25):
-        for y in range(HAUTEUR // 25):
+    for x in range(LARGEUR // COTE):
+        for y in range(HAUTEUR // COTE):
             etat = rd.randint(0, 2)
             if etat == 0:
                 generation_parcelle("blue", x, y)
@@ -67,8 +68,30 @@ def pause():
     boutton_start.config(text="Start", command=start)
 
 
-def check():
-    """Checking des cases adjacentes"""
+def create_liste_feu(liste):
+    """Créer la liste des parcelles en feu"""
+    liste_feu = []
+    for parcelle in liste:
+        if "red" in parcelle:
+            liste_feu.append(parcelle[1])
+        else:
+            pass
+    return liste_feu
+
+
+def checking(idx_parcelle):
+    """Check les cases adjacentes"""
+    nombre_parcelle_feu = 0
+    liste_feu = create_liste_feu(liste_parcelle)
+    if idx_parcelle + 1 in liste_feu:
+        nombre_parcelle_feu += 1
+    if idx_parcelle - 1 in liste_feu:
+        nombre_parcelle_feu += 1
+    if idx_parcelle + LARGEUR // COTE in liste_feu:
+        nombre_parcelle_feu += 1
+    if idx_parcelle - LARGEUR // COTE in liste_feu:
+        nombre_parcelle_feu += 1
+    return nombre_parcelle_feu
 
 
 ###############################
