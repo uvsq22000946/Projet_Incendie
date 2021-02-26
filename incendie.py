@@ -25,6 +25,8 @@ import pickle
 HAUTEUR = 400
 LARGEUR = 600
 COTE = 25
+DUREE_FEU = 8
+DUREE_CENDRE = 16
 
 ###############################
 # Variables globales
@@ -103,10 +105,23 @@ def sauvegarder():
     fichierSauvegarde = open("Projet_Incendie-2","wb")
     pickle.dump(variables, fichierSauvegarde)
     fichierSauvegarde.close()
-    
+
+
 def charger():
-    "charger un terrain dans les fichiers "    
+    "charger un terrain dans les fichiers "
+
+
+def compteur_de_tour_feu():
+    """Ajoute une case de durée d'état dans chaque liste de cendres et de feu"""
+    liste_feu = create_liste_feu(liste_parcelle)
+    liste_temps = []
+    for element in liste_feu:
+        parcelle_feu = []
+        parcelle_feu.append(element)
+        parcelle_feu.append(DUREE_FEU)
+        liste_temps.append(parcelle_feu)
     
+
 ###############################
 # Programme principal
 
