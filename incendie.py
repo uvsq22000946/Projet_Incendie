@@ -18,25 +18,68 @@ import random as rd
 from pathlib import Path
 from os import getcwd, chdir, mkdir
 import shutil
+import pickle
 ###############################
-# Variables globales
+# Constantes
 
 HAUTEUR = 400
 LARGEUR = 600
 
 ###############################
+# Variables globales
+
+liste_parcelle = []
+
+###############################
 # Fonctions
+
+
+def generation_parcelle(couleur, x, y):
+    """Genere une parcelle de la couleur
+    mise en argument aux coordonnee x et y"""
+    case_actuelle = []
+    case_actuelle.append(couleur)
+    case_actuelle.append(canvas.create_rectangle((x * 25, y * 25),
+                                                 (x * 25 + 25, y * 25 + 25),
+                                                 fill=couleur))
+    liste_parcelle.append(case_actuelle)
+
 
 def generation():
     """Genere un terrain aleatoirement"""
-    x = 0
-    while x != LARGEUR // 25:
-        canvas.create_line((x * 25, 0), (x * 25, HAUTEUR), fill="white")
-        x += 1
+
+    for x in range(LARGEUR // 25):
+        for y in range(HAUTEUR // 25):
+            etat = rd.randint(0, 2)
+            if etat == 0:
+                generation_parcelle("blue", x, y)
+            if etat == 1:
+                generation_parcelle("green", x, y)
+            if etat == 2:
+                generation_parcelle("yellow", x, y)
+
+
+def start():
+    """Lance la simulation en affichant le nombre de
+    cases en feu et l'étape de la simulation"""
+    boutton_start.config(text="Pause", command=pause)
+
+
+def pause():
+    """Mets la simulation en pause"""
+    boutton_start.config(text="Start", command=start)
+
+
+def check():
+    """Checking des cases adjacentes"""
+
 
 def sauvegarder():
     "sauvegarder son terrain actuel"
-    shutil.copytree("C:\Users\acer\Desktop\Projet_Incendie-2\incendie.py","C:\Users\acer\Desktop\Projet_Incendie-2\proj")
+    variables = [liste_parcelle]
+    fichierSauvegarde = open("Projet_Incendie-2","wb")
+    pickle.dump(variables, fichierSauvegarde)
+    fichierSauvegarde.close()
     
 def charger():
     "charger un terrain dans les fichiers "    
@@ -44,11 +87,12 @@ def charger():
 ###############################
 # Programme principal
 
+
 racine = tk.Tk()
 racine.config(bg="black")
 
-
 canvas = tk.Canvas(racine, height=HAUTEUR, width=LARGEUR, bg="black")
+
 boutton_generation = tk.Button(racine, text="Génération du terrain", font=("Helvatica", "20"), bg="black", fg="white", command=generation)
 boutton_sauvegarder= tk.Button(racine, text="Sauvegarder", font=("Arvo", "20"), bg="black", fg="white", command=sauvegarder)
 boutton_charger = tk.Button(racine, text="Charger", font=("Arvo", "20"), bg="black", fg="white", command=charger)
