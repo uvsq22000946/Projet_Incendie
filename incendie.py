@@ -60,6 +60,7 @@ def start():
     """Lance la simulation en affichant le nombre de
     cases en feu et l'étape de la simulation"""
     boutton_start.config(text="Pause", command=pause)
+    
 
 
 def pause():
