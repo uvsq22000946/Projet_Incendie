@@ -74,18 +74,15 @@ def generation():
                 generation_parcelle("green", x, y, 1)
             if etat == 2:
                 generation_parcelle("yellow", x, y, 2)
-    print(tableau)
-
 
 
 def transformation_parcelle(event):
-    x = event.x//25
-    y = event.y//25
-    canvas.create_rectangle(event.x//25,event.y//25, fill="red")
+    x = event.x // COTE
+    y = event.y // COTE
     if tableau[x][y] == 0:
         pass
     else:
-        canvas.create_rectangle(event.x//25,event.y//25, fill="red")
+        canvas.create_rectangle((x * COTE, y * COTE), (x * COTE + COTE, y * COTE + COTE), fill="red")
 
 
 
@@ -156,9 +153,9 @@ boutton_charger = tk.Button(racine, text="Charger", font=("Arvo", "20"), bg="bla
 
 creer_tableau()
 
-canvas.bind('<Button-1>', transformation_parcelle )
 canvas.grid(column=0, rowspan=3)
 boutton_generation.grid(row=0, column=1)
 boutton_sauvegarder.grid(row=1, column=1)
 boutton_charger.grid(row=2 , column=1)
+canvas.bind('<Button-1>', transformation_parcelle)
 racine.mainloop()
