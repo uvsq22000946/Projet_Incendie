@@ -77,12 +77,15 @@ def generation():
 
 
 def transformation_parcelle(event):
+    """Mets le feu a une parcelle et change son etat en 3 = feu"""
+    global tableau
     x = event.x // COTE
     y = event.y // COTE
     if tableau[x][y] == 0:
         pass
     else:
         canvas.create_rectangle((x * COTE, y * COTE), (x * COTE + COTE, y * COTE + COTE), fill="red")
+        tableau[x][y] = 3
 
 
 
@@ -138,6 +141,12 @@ def compteur_de_tour_feu():
         liste_temps.append(parcelle_feu)
 
 
+def test(event):
+    x = event.x // 25
+    y = event.y // 25
+    print(tableau[x][y])
+
+
 ###############################
 # Programme principal
 
@@ -158,4 +167,5 @@ boutton_generation.grid(row=0, column=1)
 boutton_sauvegarder.grid(row=1, column=1)
 boutton_charger.grid(row=2 , column=1)
 canvas.bind('<Button-1>', transformation_parcelle)
+canvas.bind('<Button-3>', test)
 racine.mainloop()
