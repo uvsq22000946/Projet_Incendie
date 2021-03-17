@@ -60,6 +60,8 @@ def creer_tableau():
         tableau.append(tableau_col)
 
 
+
+
 def generation():
     """Genere un terrain aleatoirement"""
 
@@ -75,6 +77,18 @@ def generation():
     print(tableau)
 
 
+
+def transformation_parcelle(event):
+    x = event.x//25
+    y = event.y//25
+    canvas.create_rectangle(event.x//25,event.y//25, fill="red")
+    if tableau[x][y] == 0:
+        pass
+    else:
+        canvas.create_rectangle(event.x//25,event.y//25, fill="red")
+
+
+
 def start():
     """Lance la simulation en affichant le nombre de
     cases en feu et l'étape de la simulation"""
@@ -85,6 +99,7 @@ def start():
 def pause():
     """Mets la simulation en pause"""
     boutton_start.config(text="Start", command=start)
+
 
 
 def create_liste_feu(liste):
@@ -141,6 +156,7 @@ boutton_charger = tk.Button(racine, text="Charger", font=("Arvo", "20"), bg="bla
 
 creer_tableau()
 
+canvas.bind('<Button-1>', transformation_parcelle )
 canvas.grid(column=0, rowspan=3)
 boutton_generation.grid(row=0, column=1)
 boutton_sauvegarder.grid(row=1, column=1)
