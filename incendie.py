@@ -45,21 +45,22 @@ def generation_parcelle(couleur, x, y, etat):
     etat change en fonction de la nature de la parcelle
     0 = Eau, 1 = Foret, 2 = Plaine"""
     global tableau
-    canvas.create_rectangle((x * COTE, y * COTE), (x * COTE + COTE, y * COTE + COTE),
+    canvas.create_rectangle((x * COTE, y * COTE), (x * COTE + COTE,
+                                                   y * COTE + COTE),
                             fill=couleur)
-    tableau[x][y] = etat
+    tableau[x][y][0] = etat
+
 
 def creer_tableau():
-    """Initialise un tableau qui vaut -1 pour une case morte et l'identifiant du carre si une case est vivante"""
+    """Initialise un tableau qui vaut -1 pour une case
+    morte et l'identifiant du carre si une case est vivante"""
     global tableau
     tableau = []
     for col in range(NB_COL):
         tableau_col = []
         for line in range(NB_LINE):
-            tableau_col.append(-1)
+            tableau_col.append([-1])
         tableau.append(tableau_col)
-
-
 
 
 def generation():
@@ -84,16 +85,31 @@ def transformation_parcelle(event):
     if tableau[x][y] == 0:
         pass
     else:
-        canvas.create_rectangle((x * COTE, y * COTE), (x * COTE + COTE, y * COTE + COTE), fill="red")
-        tableau[x][y] = 3
+        canvas.create_rectangle((x * COTE, y * COTE),
+                                (x * COTE + COTE, y * COTE + COTE), fill="red")
+        tableau[x][y][0] = 3
+        tableau[x][y].append(DUREE_FEU)
 
+
+def prend_feu(x, y):
+    """Enflame la parcelle aux coordonnées x y"""
+    canvas.create_rectangle((x * COTE, y * COTE),
+                            (x * COTE + COTE, y * COTE + COTE), fill="red")
+    tableau[x][y][0] = 3
+    tableau[x][y].append(DUREE_FEU)
 
 
 def start():
     """Lance la simulation en affichant le nombre de
     cases en feu et l'étape de la simulation"""
     boutton_start.config(text="Pause", command=pause)
-    
+    for x in range(LARGEUR // COTE):
+        for y in range(HAUTEUR // COTE):
+                if tableau[x][y][0] == 3:
+                    checking_plaine(x, y)
+                if tableau[x][y][0] == 1:
+                    checking_foret(x, y)
+    canvas.after(200, start)
 
 
 def pause():
@@ -101,44 +117,68 @@ def pause():
     boutton_start.config(text="Start", command=start)
 
 
-
-def create_liste_feu(liste):
-    """Créer la liste des parcelles en feu"""
-    liste_feu = []
-    for parcelle in liste:
-        if "red" in parcelle:
-            liste_feu.append(parcelle[1])
-        else:
-            pass
-    return liste_feu
-
-
-def checking(x, y):
+def checking_plaine(x, y):
     """Check les cases adjacentes"""
-    pass
+    etat_case_dessus = tableau[x][y - 1][0]
+    etat_case_dessous = tableau[x][y + 1][0]
+    etat_case_droite = tableau[x + 1][y][0]
+    etat_case_gauche = tableau[x - 1][y][0]
+    if etat_case_dessus == 2:
+        prend_feu(x, y - 1)
+    else:
+        pass
+    if etat_case_dessous == 2:
+        prend_feu(x, y + 1)
+    else:
+        pass
+    if etat_case_droite == 2:
+        prend_feu(x + 1, y)
+    else:
+        pass
+    if etat_case_gauche == 2:
+        prend_feu(x - 1, y)
+    else:
+        pass
+
+
+def checking_foret(x, y):
+    """Check les cases adjacentes"""
+    etat_case_dessus = tableau[x][y - 1][0]
+    etat_case_dessous = tableau[x][y + 1][0]
+    etat_case_droite = tableau[x + 1][y][0]
+    etat_case_gauche = tableau[x - 1][y][0]
+    var_feu = 0
+    if etat_case_dessus == 3:
+        var_feu += 1
+    else:
+        pass
+    if etat_case_dessous == 3:
+        var_feu += 1
+    else:
+        pass
+    if etat_case_droite == 3:
+        var_feu += 1
+    else:
+        pass
+    if etat_case_gauche == 3:
+        var_feu += 1
+    else:
+        pass
+    random = rd.randint(0, 10)
+    if random <= var_feu:
+        prend_feu(x, y)
 
 
 def sauvegarder():
     "sauvegarder son terrain actuel"
     variables = [liste_parcelle]
-    fichierSauvegarde = open("Projet_Incendie-2","wb")
+    fichierSauvegarde = open("Projet_Incendie-2", "wb")
     pickle.dump(variables, fichierSauvegarde)
     fichierSauvegarde.close()
 
 
 def charger():
     "charger un terrain dans les fichiers "
-
-
-def compteur_de_tour_feu():
-    """Ajoute une case de durée d'état dans chaque liste de cendres et de feu"""
-    liste_feu = create_liste_feu(liste_parcelle)
-    liste_temps = []
-    for element in liste_feu:
-        parcelle_feu = []
-        parcelle_feu.append(element)
-        parcelle_feu.append(DUREE_FEU)
-        liste_temps.append(parcelle_feu)
 
 
 def test(event):
@@ -156,16 +196,24 @@ racine.config(bg="black")
 
 canvas = tk.Canvas(racine, height=HAUTEUR, width=LARGEUR, bg="black")
 
-boutton_generation = tk.Button(racine, text="Génération du terrain", font=("Helvatica", "20"), bg="black", fg="white", command=generation)
-boutton_sauvegarder= tk.Button(racine, text="Sauvegarder", font=("Arvo", "20"), bg="black", fg="white", command=sauvegarder)
-boutton_charger = tk.Button(racine, text="Charger", font=("Arvo", "20"), bg="black", fg="white", command=charger)
+boutton_generation = tk.Button(racine, text="Génération du terrain",
+                               font=("Helvatica", "20"), bg="black",
+                               fg="white", command=generation)
+boutton_sauvegarder = tk.Button(racine, text="Sauvegarder",
+                                font=("Arvo", "20"), bg="black",
+                                fg="white", command=sauvegarder)
+boutton_charger = tk.Button(racine, text="Charger", font=("Arvo", "20"),
+                            bg="black", fg="white", command=charger)
+boutton_start = tk.Button(racine, text="Start", font=("Helvatica", "20"),
+                          bg="black", fg="white", command=start)
 
 creer_tableau()
 
 canvas.grid(column=0, rowspan=3)
 boutton_generation.grid(row=0, column=1)
 boutton_sauvegarder.grid(row=1, column=1)
-boutton_charger.grid(row=2 , column=1)
+boutton_charger.grid(row=2, column=1)
+boutton_start.grid(row=3, column=0)
 canvas.bind('<Button-1>', transformation_parcelle)
 canvas.bind('<Button-3>', test)
 racine.mainloop()
