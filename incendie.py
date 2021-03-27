@@ -109,7 +109,7 @@ def start():
                     checking_plaine(x, y)
                 if tableau[x][y][0] == 1:
                     checking_foret(x, y)
-    canvas.after(200, start)
+    canvas.after(1000, start)
 
 
 def pause():
@@ -119,52 +119,60 @@ def pause():
 
 def checking_plaine(x, y):
     """Check les cases adjacentes"""
-    etat_case_dessus = tableau[x][y - 1][0]
-    etat_case_dessous = tableau[x][y + 1][0]
-    etat_case_droite = tableau[x + 1][y][0]
-    etat_case_gauche = tableau[x - 1][y][0]
-    if etat_case_dessus == 2:
-        prend_feu(x, y - 1)
-    else:
-        pass
-    if etat_case_dessous == 2:
-        prend_feu(x, y + 1)
-    else:
-        pass
-    if etat_case_droite == 2:
-        prend_feu(x + 1, y)
-    else:
-        pass
-    if etat_case_gauche == 2:
-        prend_feu(x - 1, y)
-    else:
-        pass
+    if y - 1 >= 0:
+        etat_case_dessus = tableau[x][y - 1][0]
+        if etat_case_dessus == 2:
+            prend_feu(x, y - 1)
+        else:
+            pass
+    if y + 1 < HAUTEUR // COTE:
+        etat_case_dessous = tableau[x][y + 1][0]
+        if etat_case_dessous == 2:
+            prend_feu(x, y + 1)
+        else:
+            pass
+    if x + 1 < LARGEUR // COTE:
+        etat_case_droite = tableau[x + 1][y][0]
+        if etat_case_droite == 2:
+            prend_feu(x + 1, y)
+        else:
+            pass
+    if x - 1 >= 0:
+        etat_case_gauche = tableau[x - 1][y][0]
+        if etat_case_gauche == 2:
+            prend_feu(x - 1, y)
+        else:
+            pass
 
 
 def checking_foret(x, y):
     """Check les cases adjacentes"""
-    etat_case_dessus = tableau[x][y - 1][0]
-    etat_case_dessous = tableau[x][y + 1][0]
-    etat_case_droite = tableau[x + 1][y][0]
-    etat_case_gauche = tableau[x - 1][y][0]
     var_feu = 0
-    if etat_case_dessus == 3:
-        var_feu += 1
-    else:
-        pass
-    if etat_case_dessous == 3:
-        var_feu += 1
-    else:
-        pass
-    if etat_case_droite == 3:
-        var_feu += 1
-    else:
-        pass
-    if etat_case_gauche == 3:
-        var_feu += 1
-    else:
-        pass
-    random = rd.randint(0, 10)
+    if y - 1 >= 0:
+        feu_case_dessus = tableau[x][y - 1][0]
+        if feu_case_dessus == 3:
+            var_feu += 1
+        else:
+            pass
+    if y + 1 < HAUTEUR // COTE:
+        feu_case_dessous = tableau[x][y + 1][0]
+        if feu_case_dessous == 3:
+            var_feu += 1
+        else:
+            pass
+    if x + 1 < LARGEUR // COTE:
+        feu_case_droite = tableau[x + 1][y][0]
+        if feu_case_droite == 3:
+            var_feu += 1
+        else:
+            pass
+    if x - 1 >= 0:
+        feu_case_gauche = tableau[x - 1][y][0]
+        if feu_case_gauche == 3:
+            var_feu += 1
+        else:
+            pass
+    random = rd.randint(1, 10)
     if random <= var_feu:
         prend_feu(x, y)
 
