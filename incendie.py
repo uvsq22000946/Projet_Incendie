@@ -29,6 +29,7 @@ DUREE_FEU = 8
 DUREE_CENDRE = 16
 NB_LINE = HAUTEUR // COTE
 NB_COL = LARGEUR // COTE
+VITESSE = 200
 
 ###############################
 # Variables globales
@@ -59,7 +60,7 @@ def creer_tableau():
     for col in range(NB_COL):
         tableau_col = []
         for line in range(NB_LINE):
-            tableau_col.append([-1])
+            tableau_col.append([-1, -1])
         tableau.append(tableau_col)
 
 
@@ -88,7 +89,7 @@ def transformation_parcelle(event):
         canvas.create_rectangle((x * COTE, y * COTE),
                                 (x * COTE + COTE, y * COTE + COTE), fill="red")
         tableau[x][y][0] = 3
-        tableau[x][y].append(DUREE_FEU)
+        tableau[x][y][1] = DUREE_FEU
 
 
 def prend_feu(x, y):
@@ -96,25 +97,55 @@ def prend_feu(x, y):
     canvas.create_rectangle((x * COTE, y * COTE),
                             (x * COTE + COTE, y * COTE + COTE), fill="red")
     tableau[x][y][0] = 3
-    tableau[x][y].append(DUREE_FEU)
+    tableau[x][y][1] = DUREE_FEU
 
 
-def start():
-    """Lance la simulation en affichant le nombre de
-    cases en feu et l'étape de la simulation"""
+def etape():
+    """Effectue une étape dans la simuation"""
     boutton_start.config(text="Pause", command=pause)
     for x in range(LARGEUR // COTE):
         for y in range(HAUTEUR // COTE):
                 if tableau[x][y][0] == 3:
                     checking_plaine(x, y)
+                    tableau[x][y][1] -= 1
+                    cendre_chaude(x, y)
                 if tableau[x][y][0] == 1:
                     checking_foret(x, y)
-    canvas.after(1000, start)
+                if tableau[x][y][0] == 4:
+                    tableau[x][y][1] -= 1
+                    cendre_froide(x, y)
+
+
+def cendre_chaude(x, y):
+    """Gestion des cendres chaudes"""
+    if tableau[x][y][1] <= 0:
+        tableau[x][y][0] = 4
+        tableau[x][y][1] = DUREE_CENDRE
+        canvas.create_rectangle((x * COTE, y * COTE), (x * COTE + COTE,
+                                                    y * COTE + COTE),
+                                fill="gray")
+
+
+def cendre_froide(x, y):
+    """Gestion des cendres froides"""
+    if tableau[x][y][1] <= 0:
+        tableau[x][y][0] = 5
+        tableau[x][y][1] = -1
+        canvas.create_rectangle((x * COTE, y * COTE), (x * COTE + COTE,
+                                                    y * COTE + COTE),
+                                fill="black")
+
+def start():
+    """Lance la simulation en affichant le nombre de
+    cases en feu et l'étape de la simulation"""
+    etape()
+    canvas.after(VITESSE, start)
 
 
 def pause():
     """Mets la simulation en pause"""
     boutton_start.config(text="Start", command=start)
+    
 
 
 def checking_plaine(x, y):
@@ -224,4 +255,5 @@ boutton_charger.grid(row=2, column=1)
 boutton_start.grid(row=3, column=0)
 canvas.bind('<Button-1>', transformation_parcelle)
 canvas.bind('<Button-3>', test)
+canvas.bind("m", etape)
 racine.mainloop()
